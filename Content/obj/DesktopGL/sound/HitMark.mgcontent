@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/Sound/HitMark.wav</SourceFile>
+  <SourceTime>2022-05-29T18:38:33.0710944+01:00</SourceTime>
+  <DestFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/bin/DesktopGL/Sound/HitMark.xnb</DestFile>
+  <DestTime>2022-05-29T18:39:33.1006424+01:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2020-08-10T16:17:54+01:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

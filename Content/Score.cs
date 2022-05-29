@@ -6,8 +6,6 @@ namespace P1_Monogame.Content
 {
     public class Score
     {
-       // public string PlayerName { get; set; }
-
         public float Value;
         public int Rounds;
     }
