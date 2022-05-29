@@ -17,6 +17,9 @@ namespace P1_Monogame.Sprites
         public Vector2 newposition;
         public float weaponTimer;
 
+        private float lifeTimerE;
+        private float lifeTimerB;
+
         public Player(Texture2D texture)
             : base(texture)
         {
@@ -24,11 +27,14 @@ namespace P1_Monogame.Sprites
 
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
+
             newposition = Position;
             _previousKey = _currentKey;
             _currentKey = Mouse.GetState();
 
             weaponTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            lifeTimerE += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            lifeTimerB += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             MouseState mouse = Mouse.GetState();
 
@@ -63,6 +69,40 @@ namespace P1_Monogame.Sprites
                 AddWeapon(sprites);
             }
 
+            DmgReception(sprites);
+
+        }
+
+        public void DmgReception(List<Sprite> sprites)
+        {
+            foreach (Sprite s1 in sprites)
+            {
+                if (s1 is Enemy)
+                {
+                    if (s1.Rectangle.Intersects(this.Rectangle))
+                    {
+                        if (lifeTimerE > 1f)
+                        {
+                            lifeTimerE = 0;
+                            this.lifepoints -= 2;
+                        }
+                    }
+                }
+            }
+            foreach (Sprite s1 in sprites)
+            {
+                if (s1 is Boss)
+                {
+                    if (s1.Rectangle.Intersects(this.Rectangle))
+                    {
+                        if (lifeTimerB > 3f)
+                        {
+                            lifeTimerB = 0;
+                            this.lifepoints -= 10;
+                        }
+                    }
+                }
+            }
         }
 
         private void Die(List<Sprite> sprites)
@@ -102,6 +142,8 @@ namespace P1_Monogame.Sprites
             //weapon.Parent = this;
 
             sprites.Add(weapon);
+
+
         }
     }
 }
