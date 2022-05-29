@@ -38,43 +38,8 @@ namespace P1_Monogame.Sprites
             enemyVelocity = 1f;
         }
 
-
-
-
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            //for (int i = 0; i < sprites.Count; i++)
-            //{
-            //    var sprites2 = sprites[i];
-            //    if (sprites2 is Enemy)
-            //    {
-            //        enemyDirection.Normalize();
-            //        //Position += enemyDirection;// * enemyVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //    }
-            //}
-
-
-            //foreach (Sprite s2 in sprites)
-            //{
-            //    if (s2 is Player)
-            //    {
-            //        foreach (Sprite s1 in sprites)
-            //        {
-            //            if (s1 is Enemy)
-            //            {
-            //                s1.enemyDirection = s2.Position - s1.Position;
-            //                s1.enemyDirection.Normalize();
-            //                s1.Position += s1.enemyDirection * s1.enemyVelocity;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //if (Rectangle.Right >= Game1.screenWidth)
-            //    isRemoved = true;
-           
-
-
             if (enemyLifepoints == 0)
             {
                 this.isRemoved = true;
@@ -87,30 +52,6 @@ namespace P1_Monogame.Sprites
                     }
                 }
             }
-
-
-
-            //enemyMove(sprites);
         }
-
-        //private static void enemyMove(List<Sprite> sprites)
-        //{
-        //    for (int i = 0; i < sprites.Count; i++)
-        //    {
-        //        var sprites2 = sprites[i];
-        //        if (sprites2 is Player)
-        //        {
-        //            for (int j = 0; j < sprites.Count; j++)
-        //            {
-        //                var sprites1 = sprites[j];
-        //                if (sprites1 is Enemy)
-        //                {
-        //                    sprites1.enemyDirection = sprites2.Position - sprites1.Position;
-        //                    sprites1.Position += sprites1.enemyDirection * sprites1.enemyVelocity;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

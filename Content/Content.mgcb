@@ -152,15 +152,15 @@
 /processorParam:TextureFormat=Color
 /build:saitama1.png
 
-#begin sound/y2mate.com - hit marker Sound Effect.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
+#begin Sound/HitMark.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:sound/y2mate.com - hit marker Sound Effect.mp3
+/build:Sound/HitMark.wav
 
-#begin sound/y2mate.com - One Punch Man OST 1080p Seigi Shikkou Original.mp3
+#begin Sound/soundtrack.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/y2mate.com - One Punch Man OST 1080p Seigi Shikkou Original.mp3
+/build:Sound/soundtrack.mp3
 

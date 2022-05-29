@@ -30,7 +30,6 @@ namespace P1_Monogame.Sprites
 
             weaponTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-
             MouseState mouse = Mouse.GetState();
 
             distance.X = mouse.X - Position.X;

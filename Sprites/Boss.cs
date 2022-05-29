@@ -20,18 +20,6 @@ namespace P1_Monogame.Sprites
 
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
-            //for (int i = 0; i < sprites.Count; i++)
-            //{
-            //    var sprites2 = sprites[i];
-            //    if (sprites2 is Boss)
-            //    {
-            //        enemyDirection.Normalize();
-            //        //Position += enemyDirection;// * enemyVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //    }
-            //}
-            //if (Rectangle.Right >= Game1.screenWidth)
-            //    isRemoved = true;
-
             if (enemyLifepoints == 0)
             {
                 this.isRemoved = true;
@@ -45,9 +33,6 @@ namespace P1_Monogame.Sprites
                 }
             }
 
-
-
-            //enemyMove(sprites);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -7,6 +8,7 @@ using P1_Monogame.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace P1_Monogame
 {
@@ -56,6 +58,8 @@ namespace P1_Monogame
         private float nextRoundsTimer;
         private int RoundTime = 10;
 
+        Song song;
+
         enum GameState
         {
             Menu,
@@ -66,12 +70,15 @@ namespace P1_Monogame
         }
 
         GameState gameState = GameState.Menu;
+        List<SoundEffect> soundEffects;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            soundEffects = new List<SoundEffect>();
 
             Random = new Random();
 
@@ -109,15 +116,35 @@ namespace P1_Monogame
 
             pGround = new Rectangle(0, 0, screenWidth, screenHeight);
 
+            soundEffects.Add(Content.Load<SoundEffect>("Sound/hitMark"));
+            this.song = Content.Load<Song>("Sound/soundtrack");
+            MediaPlayer.Play(song);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+
+            soundEffects.Add(Content.Load<SoundEffect>("Sound/hitMark"));
+
+            //var instance = soundEffects[0].CreateInstance();
+            //instance.IsLooped = true;
+            //instance.Play();
+
+
             Restart();
         }
 
+        private void MediaPlayer_MediaStateChanged(object sender, EventArgs e)
+        {
+            MediaPlayer.Volume -= 0.1f;
+            MediaPlayer.Play(song);
+        }
 
         protected override void Update(GameTime gameTime)
         {
 
             _previousMouse = _currentMouse;
             _currentMouse = Mouse.GetState();
+            _previousKey = _currentKey;
+            _currentKey = Keyboard.GetState();
 
             switch (gameState)
             {
@@ -136,8 +163,6 @@ namespace P1_Monogame
                     break;
                 case GameState.Play:
                     #region play
-                    _previousKey = _currentKey;
-                    _currentKey = Keyboard.GetState();
                     if (_currentKey.IsKeyUp(Keys.P) && _previousKey.IsKeyDown(Keys.P))
                     {
                         gameState = GameState.Pause;
@@ -177,7 +202,6 @@ namespace P1_Monogame
                                     s.lifepoints += 1;
                         }
                     }
-
                     DmgReception();
 
                     enemyMove();
@@ -217,7 +241,17 @@ namespace P1_Monogame
                     break;
                 default:
                     break;
+
             }
+
+            if (_currentKey.IsKeyUp(Keys.M) && _previousKey.IsKeyDown(Keys.M))
+            {
+                if (MediaPlayer.Volume == 0.0f)
+                    MediaPlayer.Volume = 1f;
+                else
+                    MediaPlayer.Volume = 0f;
+            }
+
             base.Update(gameTime);
         }
 
@@ -261,7 +295,6 @@ namespace P1_Monogame
             spriteBatch.End();
             base.Draw(gameTime);
         }
-
         #region Funcoes
 
         private void Restart()
@@ -274,7 +307,7 @@ namespace P1_Monogame
                 {
                     Position = new Vector2(screenWidth/2,screenHeight/2),
                     Weapon = new Weapon(Content.Load<Texture2D>("chinelo")),
-                    lifepoints = 10000,
+                    lifepoints = 10,
                     playerScore = 0,
                 }
             };
@@ -307,8 +340,6 @@ namespace P1_Monogame
 
         private void enemyMove()
         {
-            //foreach(Sprite s in sprites)
-
             foreach (Sprite s2 in sprites)
             {
                 if (s2 is Player)
@@ -338,6 +369,10 @@ namespace P1_Monogame
                         {
                             if (s1.Rectangle.Intersects(s2.Rectangle))
                             {
+                                var instance = soundEffects[0].CreateInstance();
+                                instance.IsLooped = false;
+                                instance.Play();
+
                                 s2.enemyLifepoints--;
                                 s1.isRemoved = true;
                             }
@@ -360,6 +395,10 @@ namespace P1_Monogame
                         {
                             if (s1.Rectangle.Intersects(s2.Rectangle))
                             {
+                                var instance = soundEffects[0].CreateInstance();
+                                instance.IsLooped = false;
+                                instance.Play();
+
                                 s2.enemyLifepoints--;
                                 s1.isRemoved = true;
                             }
@@ -433,11 +472,11 @@ namespace P1_Monogame
 
                     if (player.HasDied)
                     {
-                       _scoreManager.Add(new Score()
-                       {
-                           Value = player.playerScore,
-                           Rounds = rounds,
-                       });
+                        _scoreManager.Add(new Score()
+                        {
+                            Value = player.playerScore,
+                            Rounds = rounds,
+                        });
 
                         ScoreManager.Save(_scoreManager);
 
@@ -450,10 +489,10 @@ namespace P1_Monogame
         private void GameStateDraw()
         {
 
-            _fontY = new Vector2(screenWidth - 100, 10);
+            _fontY = new Vector2(screenWidth - 100, 5);
             foreach (Sprite sprite in sprites)
                 if (sprite is Boss)
-                    spriteBatch.DrawString(_font, string.Format("Boss Hp: {0}", sprite.enemyLifepoints), new Vector2(screenWidth - 150, _fontY.Y += 30), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
+                    spriteBatch.DrawString(_font, string.Format("Boss Hp: {0}", sprite.enemyLifepoints), new Vector2(screenWidth - 200, _fontY.Y += 30), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
 
             foreach (Sprite s in sprites)
                 if (s is Player)
@@ -463,9 +502,10 @@ namespace P1_Monogame
                 }
 
             spriteBatch.DrawString(_font, string.Format("Round: {0}", rounds - 1), new Vector2(10, 70), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
-            spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 100), Color.Yellow, 0,Origin,2,SpriteEffects.None,1);
+            spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 100), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
 
         }
+
         #endregion
     }
 }
