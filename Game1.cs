@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using P1_Monogame.Content;
 using P1_Monogame.Sprites;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace P1_Monogame
 {
@@ -15,12 +17,27 @@ namespace P1_Monogame
         private SpriteFont _font;
         private Vector2 _fontY;
         public static Random Random;
-        private Button button;
-        private Texture2D buttonTexture;
+
+        private Button playButton;
+        private Button resumeButton;
+        private Button quitButton;
+        private Button scoreButton;
+        private Button menuButton;
+
+        private Texture2D playTexture;
+        private Texture2D resumeTexture;
+        private Texture2D quitTexture;
+        private Texture2D scoreTexture;
+        private Texture2D menuTexture;
+
+        private Vector2 Origin = Vector2.Zero;
+
         private KeyboardState _currentKey;
         private KeyboardState _previousKey;
+        private MouseState _currentMouse;
+        private MouseState _previousMouse;
 
-        public int Score;
+        private ScoreManager _scoreManager;
 
         private Texture2D backGround;
         private Rectangle pGround;
@@ -29,12 +46,12 @@ namespace P1_Monogame
         public static int screenWidth;
         public static int screenHeight;
 
-
         private List<Sprite> sprites;
         public bool hasStarted = false;
         private float lifeTimerE;
         private float lifeTimerB;
         private int rounds;
+        public float timer;
         private float roundTimer;
         private float nextRoundsTimer;
         private int RoundTime = 10;
@@ -42,6 +59,7 @@ namespace P1_Monogame
         enum GameState
         {
             Menu,
+            Score,
             Play,
             Pause,
             Quit,
@@ -67,61 +85,67 @@ namespace P1_Monogame
             menuBground = Content.Load<Texture2D>("menuBground");
             backGround = Content.Load<Texture2D>("cityBground");
             _font = Content.Load<SpriteFont>("Font");
+            _scoreManager = ScoreManager.Load();
 
-            buttonTexture = Content.Load<Texture2D>("Button");
-            button = new Button(buttonTexture, graphics.GraphicsDevice);
-            button.setPosition(new Vector2((screenWidth / 2) - (buttonTexture.Width / 5), 150));
+            playTexture = Content.Load<Texture2D>("Button/play");
+            playButton = new Button(playTexture, graphics.GraphicsDevice);
+            playButton.setPosition(new Vector2((screenWidth / 2) - 75, 150));
+
+            scoreTexture = Content.Load<Texture2D>("Button/score");
+            scoreButton = new Button(scoreTexture, graphics.GraphicsDevice);
+            scoreButton.setPosition(new Vector2((screenWidth / 3) + 30, 160 + playTexture.Height));
+
+            resumeTexture = Content.Load<Texture2D>("Button/back");
+            resumeButton = new Button(resumeTexture, graphics.GraphicsDevice);
+            resumeButton.setPosition(new Vector2(10, screenHeight - resumeTexture.Height - 10));
+
+            quitTexture = Content.Load<Texture2D>("Button/back");
+            quitButton = new Button(quitTexture, graphics.GraphicsDevice);
+            quitButton.setPosition(new Vector2(10, screenHeight - quitTexture.Height - 10));
+
+            menuTexture = Content.Load<Texture2D>("Button/menu");
+            menuButton = new Button(menuTexture, graphics.GraphicsDevice);
+            menuButton.setPosition(new Vector2((screenWidth / 2) - 75, 150));
 
             pGround = new Rectangle(0, 0, screenWidth, screenHeight);
 
             Restart();
         }
 
-        private void Restart()
-        {
-            Texture2D playerTexture = Content.Load<Texture2D>("saitama1");
-
-            sprites = new List<Sprite>()
-            {
-                new Player(playerTexture)
-                {
-                    Position = new Vector2(screenWidth/2,screenHeight/2),
-                    Weapon = new Weapon(Content.Load<Texture2D>("chinelo")),
-                    lifepoints = 10,
-                    playerScore = 0,
-                }
-            };
-
-            rounds = 1;
-            roundTimer = 0;
-            nextRoundsTimer = 10;
-
-            hasStarted = false;
-        }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
-            MouseState mouse = Mouse.GetState();
+            _previousMouse = _currentMouse;
+            _currentMouse = Mouse.GetState();
 
             switch (gameState)
             {
                 case GameState.Menu:
-                    if (button.isClicked == true)
+                    playButton.Update(_currentMouse, _previousMouse);
+                    quitButton.Update(_currentMouse, _previousMouse);
+                    scoreButton.Update(_currentMouse, _previousMouse);
+
+                    if (playButton.isClicked == true)
                         gameState = GameState.Play;
-                    button.Update(mouse);
+                    if (quitButton.isClicked == true)
+                        gameState = GameState.Quit;
+                    if (scoreButton.isClicked == true)
+                        gameState = GameState.Score;
+                    Restart();
                     break;
                 case GameState.Play:
+                    #region play
                     _previousKey = _currentKey;
                     _currentKey = Keyboard.GetState();
                     if (_currentKey.IsKeyUp(Keys.P) && _previousKey.IsKeyDown(Keys.P))
+                    {
                         gameState = GameState.Pause;
+                        return;
+                    }
+
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         hasStarted = true;
-                    if (gameState != GameState.Play)
-                        return;
                     if (!hasStarted)
                         return;
 
@@ -168,15 +192,26 @@ namespace P1_Monogame
 
                     foreach (Sprite sprite in sprites.ToArray())
                         sprite.Update(gameTime, sprites);
+
                     break;
                 case GameState.Pause:
-                    _previousKey = _currentKey;
-                    _currentKey = Keyboard.GetState();
-                    if (_currentKey.IsKeyUp(Keys.P) && _previousKey.IsKeyDown(Keys.P))
+                    menuButton.Update(_currentMouse, _previousMouse);
+                    resumeButton.Update(_currentMouse, _previousMouse);
+
+
+                    if (resumeButton.isClicked == true)
                         gameState = GameState.Play;
-                    if (_currentKey.IsKeyDown(Keys.Escape) && _previousKey.IsKeyDown(Keys.Escape))
+                    if ((_currentKey.IsKeyDown(Keys.Escape) && _previousKey.IsKeyDown(Keys.Escape)) || menuButton.isClicked == true)
                         gameState = GameState.Menu;
                     break;
+                #endregion
+                case GameState.Score:
+                    resumeButton.Update(_currentMouse, _previousMouse);
+
+                    if (resumeButton.isClicked == true)
+                        gameState = GameState.Menu;
+                    break;
+
                 case GameState.Quit:
                     Exit();
                     break;
@@ -184,6 +219,71 @@ namespace P1_Monogame
                     break;
             }
             base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+
+            switch (gameState)
+            {
+                case GameState.Menu:
+                    spriteBatch.Draw(menuBground, pGround, Color.White);
+                    playButton.Draw(spriteBatch);
+                    scoreButton.Draw(spriteBatch);
+                    quitButton.Draw(spriteBatch);
+                    break;
+                case GameState.Play:
+                    spriteBatch.Draw(backGround, pGround, Color.White);
+                    foreach (Sprite sprite in sprites)
+                        sprite.Draw(spriteBatch);
+                    GameStateDraw();
+                    break;
+                case GameState.Pause:
+                    spriteBatch.Draw(menuBground, pGround, Color.White);
+                    GameStateDraw();
+                    resumeButton.Draw(spriteBatch);
+                    menuButton.Draw(spriteBatch);
+
+                    break;
+                case GameState.Score:
+                    spriteBatch.Draw(menuBground, pGround, Color.White);
+                    resumeButton.Draw(spriteBatch);
+                    spriteBatch.DrawString(_font, "Highscores:\n" + string.Join("\n", _scoreManager.Highscores.Select(c => c.Value).ToArray()), new Vector2((screenWidth / 2) - 40, 50), Color.Black);
+                    break;
+                case GameState.Quit:
+                    break;
+                default:
+                    break;
+            }
+            spriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+        #region Funcoes
+
+        private void Restart()
+        {
+            Texture2D playerTexture = Content.Load<Texture2D>("saitama1");
+
+            sprites = new List<Sprite>()
+            {
+                new Player(playerTexture)
+                {
+                    Position = new Vector2(screenWidth/2,screenHeight/2),
+                    Weapon = new Weapon(Content.Load<Texture2D>("chinelo")),
+                    lifepoints = 10000,
+                    playerScore = 0,
+                }
+            };
+
+            rounds = 1;
+            roundTimer = 0;
+            nextRoundsTimer = 10;
+
+            hasStarted = false;
         }
 
         private void BossMove()
@@ -333,6 +433,13 @@ namespace P1_Monogame
 
                     if (player.HasDied)
                     {
+                       _scoreManager.Add(new Score()
+                       {
+                           Value = player.playerScore,
+                           Rounds = rounds,
+                       });
+
+                        ScoreManager.Save(_scoreManager);
 
                         Restart();
                     }
@@ -340,64 +447,25 @@ namespace P1_Monogame
             }
         }
 
-        protected override void Draw(GameTime gameTime)
+        private void GameStateDraw()
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            _fontY = new Vector2(screenWidth - 100, 10);
+            foreach (Sprite sprite in sprites)
+                if (sprite is Boss)
+                    spriteBatch.DrawString(_font, string.Format("Boss Hp: {0}", sprite.enemyLifepoints), new Vector2(screenWidth - 150, _fontY.Y += 30), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
 
-            switch (gameState)
-            {
-                case GameState.Menu:
-                    spriteBatch.Draw(menuBground, pGround, Color.White);
-                    button.Draw(spriteBatch);
-                    break;
-                case GameState.Play:
-                    spriteBatch.Draw(backGround, pGround, Color.White);
+            foreach (Sprite s in sprites)
+                if (s is Player)
+                {
+                    spriteBatch.DrawString(_font, string.Format("Score: {0}", ((Player)s).playerScore), new Vector2(10, 10), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
+                    spriteBatch.DrawString(_font, string.Format("Hp: {0}", ((Player)s).lifepoints), new Vector2(10, 40), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
+                }
 
-                    foreach (Sprite sprite in sprites)
-                        sprite.Draw(spriteBatch);
+            spriteBatch.DrawString(_font, string.Format("Round: {0}", rounds - 1), new Vector2(10, 70), Color.Yellow, 0, Origin, 2, SpriteEffects.None, 1);
+            spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 100), Color.Yellow, 0,Origin,2,SpriteEffects.None,1);
 
-                    _fontY = new Vector2(screenWidth - 100, 10);
-                    foreach (Sprite sprite in sprites)
-                        if (sprite is Boss)
-                            spriteBatch.DrawString(_font, string.Format("Boss Hp: {0}", sprite.enemyLifepoints), new Vector2(screenWidth - 100, _fontY.Y += 20), Color.Yellow);
-
-                    foreach (Sprite s in sprites)
-                        if (s is Player)
-                        {
-                            spriteBatch.DrawString(_font, string.Format("Score: {0}", ((Player)s).playerScore), new Vector2(10, 10), Color.Yellow);
-                            spriteBatch.DrawString(_font, string.Format("Hp: {0}", ((Player)s).lifepoints), new Vector2(10, 30), Color.Yellow);
-                        }
-
-                    spriteBatch.DrawString(_font, string.Format("Round: {0}", rounds - 1), new Vector2(10, 50), Color.Yellow);
-                    spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 70), Color.Yellow);
-                    break;
-                case GameState.Pause:
-                    spriteBatch.Draw(menuBground, pGround, Color.White);
-
-                    spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 70), Color.Yellow); _fontY = new Vector2(screenWidth - 100, 10);
-                    foreach (Sprite sprite in sprites)
-                        if (sprite is Boss)
-                            spriteBatch.DrawString(_font, string.Format("Boss Hp: {0}", sprite.enemyLifepoints), new Vector2(screenWidth - 100, _fontY.Y += 20), Color.Yellow);
-
-                    foreach (Sprite s in sprites)
-                        if (s is Player)
-                        {
-                            spriteBatch.DrawString(_font, string.Format("Score: {0}", ((Player)s).playerScore), new Vector2(10, 10), Color.Yellow);
-                            spriteBatch.DrawString(_font, string.Format("Hp: {0}", ((Player)s).lifepoints), new Vector2(10, 30), Color.Yellow);
-                        }
-
-                    spriteBatch.DrawString(_font, string.Format("Round: {0}", rounds - 1), new Vector2(10, 50), Color.Yellow);
-                    spriteBatch.DrawString(_font, string.Format("Next Round in {0:0.00}", nextRoundsTimer), new Vector2(10, 70), Color.Yellow);
-                    break;
-                case GameState.Quit:
-                    break;
-                default:
-                    break;
-            }
-            spriteBatch.End();
-            base.Draw(gameTime);
         }
+        #endregion
     }
 }

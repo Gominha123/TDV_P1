@@ -10,6 +10,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="GameState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Bground.jpg" />
+    <None Remove="Content\Night background.jpg" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>
