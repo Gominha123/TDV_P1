@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/sound/y2mate.com - hit marker Sound Effect.mp3</SourceFile>
+  <SourceTime>2022-05-29T03:49:29.4705062+01:00</SourceTime>
+  <DestFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/bin/DesktopGL/Content/sound/y2mate.com - hit marker Sound Effect.xnb</DestFile>
+  <DestTime>2022-05-29T03:52:33.2208116+01:00</DestTime>
+  <Importer>Mp3Importer</Importer>
+  <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
+  <Processor>SongProcessor</Processor>
+  <ProcessorTime>2020-08-10T16:17:54+01:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput>
+    <string>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/bin/DesktopGL/Content/sound/y2mate.com - hit marker Sound Effect.ogg</string>
+  </BuildOutput>
+</PipelineBuildEvent>
