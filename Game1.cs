@@ -64,6 +64,7 @@ namespace P1_Monogame
             Score,
             Play,
             Pause,
+            Lose,
             Quit,
         }
 
@@ -215,6 +216,7 @@ namespace P1_Monogame
                         sprite.Update(gameTime, sprites);
 
                     break;
+                #endregion
                 case GameState.Pause:
                     menuButton.Update(_currentMouse, _previousMouse);
                     resumeButton.Update(_currentMouse, _previousMouse);
@@ -225,14 +227,28 @@ namespace P1_Monogame
                     if ((_currentKey.IsKeyDown(Keys.Escape) && _previousKey.IsKeyDown(Keys.Escape)) || menuButton.isClicked == true)
                         gameState = GameState.Menu;
                     break;
-                #endregion
                 case GameState.Score:
                     resumeButton.Update(_currentMouse, _previousMouse);
 
                     if (resumeButton.isClicked == true)
                         gameState = GameState.Menu;
                     break;
+                case GameState.Lose:
+                    menuButton.Update(_currentMouse, _previousMouse);
+                    playButton.Update(_currentMouse, _previousMouse);
 
+                    if (playButton.isClicked == true)
+                    {
+                        Restart();
+                        gameState = GameState.Play;
+                    }
+                    if ((_currentKey.IsKeyDown(Keys.Escape) && _previousKey.IsKeyDown(Keys.Escape)) || menuButton.isClicked == true)
+                    {
+
+                        Restart();
+                        gameState = GameState.Menu;
+                    }
+                    break;
                 case GameState.Quit:
                     Exit();
                     break;
@@ -275,6 +291,13 @@ namespace P1_Monogame
                     resumeButton.Draw(spriteBatch);
                     spriteBatch.DrawString(_font, "Highscores:\n" + string.Join("\n", _scoreManager.Highscores.Select(c => c.Value).ToArray()), new Vector2((screenWidth / 2) - 40, 50), Color.Black);
                     break;
+                case GameState.Lose:
+                    spriteBatch.Draw(menuBground, pGround, Color.Red);
+                    GameStateDraw();
+                    playButton.Draw(spriteBatch);
+                    menuButton.Draw(spriteBatch);
+
+                    break;
                 case GameState.Quit:
                     break;
                 default:
@@ -305,6 +328,7 @@ namespace P1_Monogame
             nextRoundsTimer = 10;
 
             hasStarted = false;
+
         }
 
         private void BossMove()
@@ -422,7 +446,7 @@ namespace P1_Monogame
 
                         ScoreManager.Save(_scoreManager);
 
-                        Restart();
+                            gameState = GameState.Lose;
                     }
                 }
             }
