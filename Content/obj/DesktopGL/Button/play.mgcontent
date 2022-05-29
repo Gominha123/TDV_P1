@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/boss.png</SourceFile>
-  <SourceTime>2022-05-28T00:36:05.4549754+01:00</SourceTime>
-  <DestFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/bin/DesktopGL/boss.xnb</DestFile>
-  <DestTime>2022-05-29T03:52:30.6119353+01:00</DestTime>
+  <SourceFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/Button/Play.png</SourceFile>
+  <SourceTime>2022-05-28T23:24:59.1958414+01:00</SourceTime>
+  <DestFile>C:/Users/acer/Documents/Jogos Monogame/P1_Monogame/Content/bin/DesktopGL/Button/play.xnb</DestFile>
+  <DestTime>2022-05-29T03:52:30.6268947+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

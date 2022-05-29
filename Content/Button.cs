@@ -11,7 +11,7 @@ namespace P1_Monogame.Content
     {
         Texture2D _texture;
         Vector2 _position;
-        Rectangle box;
+        Rectangle buttonBox;
 
         Color color = new Color(255, 255, 255, 255);
 
@@ -20,20 +20,19 @@ namespace P1_Monogame.Content
         public Button(Texture2D texture, GraphicsDevice graphics)
         {
             _texture = texture;
-            size = new Vector2(texture.Width/3 ,texture.Height/4);
+            size = new Vector2(texture.Width ,texture.Height);
         }
 
-       // bool down;
         public bool isClicked;
 
-        public void Update(MouseState mouse)
+        public void Update(MouseState mouse,MouseState pmouse)
         {
-            box = new Rectangle((int)_position.X, (int)_position.Y, (int)size.X, (int)size.Y);
+            buttonBox = new Rectangle((int)_position.X, (int)_position.Y, (int)size.X, (int)size.Y);
             Rectangle mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
-
-            if (mouseRectangle.Intersects(box))
+            isClicked = false;
+            if (mouseRectangle.Intersects(buttonBox))
             {
-                if (mouse.LeftButton == ButtonState.Pressed) isClicked = true;
+                if (mouse.LeftButton == ButtonState.Released && pmouse.LeftButton == ButtonState.Pressed ) isClicked = true;
             }
         }
 
@@ -44,7 +43,7 @@ namespace P1_Monogame.Content
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture,box, color);
+            spriteBatch.Draw(_texture,buttonBox, color);
 
         }
     }
