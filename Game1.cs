@@ -111,7 +111,7 @@ namespace P1_Monogame
 
             menuTexture = Content.Load<Texture2D>("Button/menu");
             menuButton = new Button(menuTexture, graphics.GraphicsDevice);
-            menuButton.setPosition(new Vector2((screenWidth / 2) - 75, 150));
+            menuButton.setPosition(new Vector2((screenWidth / 2) - 75, 100));
 
             pGround = new Rectangle(0, 0, screenWidth, screenHeight);
 
