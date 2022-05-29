@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace P1_Monogame.Sprites
             enemyLifepoints = 50;
             enemyVelocity = .5f;
         }
-       
+
 
         public override void Update(GameTime gameTime, List<Sprite> sprites)
         {
@@ -30,7 +31,6 @@ namespace P1_Monogame.Sprites
             //}
             //if (Rectangle.Right >= Game1.screenWidth)
             //    isRemoved = true;
-
 
             if (enemyLifepoints == 0)
             {

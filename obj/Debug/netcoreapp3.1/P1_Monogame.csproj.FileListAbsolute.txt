@@ -31,6 +31,13 @@ C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Conte
 C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\File.xnb
 C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Font.xnb
 C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\boss.xnb
-C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Button.xnb
 C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\cityBground.xnb
 C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\menuBground.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Button\back.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Button\menu.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Button\play.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\Button\score.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\sound\y2mate.com - hit marker Sound Effect.ogg
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\sound\y2mate.com - hit marker Sound Effect.xnb
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\sound\y2mate.com - One Punch Man OST 1080p Seigi Shikkou Original.ogg
+C:\Users\acer\Documents\Jogos Monogame\P1_Monogame\bin\Debug\netcoreapp3.1\Content\sound\y2mate.com - One Punch Man OST 1080p Seigi Shikkou Original.xnb
